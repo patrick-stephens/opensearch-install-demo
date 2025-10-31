@@ -121,7 +121,7 @@ echo "$(info) =                                                                 
 echo "$(info) =  Attach to the running container images with the following:                                                    ="
 echo "$(info) =                                                                                                                ="
 echo "$(info) =    $ podman attach ${OS_APP}                                                                                  ="
-echo "$(info) =    $ podman attach ${OSD_APP}                                                                       ="
+echo "$(info) =    $ podman attach osd                                                                                         ="
 echo "$(info) =                                                                                                                ="
 echo "$(info) =  The ${OS_APP} is available at:                                                                               ="
 echo "$(info) =                                                                                                                ="
