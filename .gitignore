@@ -1,0 +1,9 @@
+.idea/
+target/
+.DS_Store
+fluentbit-storage/
+otelcol-binary/
+demo/
+output.json
+prometheus
+otelcol-contrib
