@@ -138,7 +138,7 @@ if [ $? -ne 0 ]; then
   echo "$(warn) Maybe try to see if it completed now that more time has"
   echo "$(warn) passed by running this commmand on the command line:"
   echo
-  echo "$(warn)    command curl http://localhost:9200 -ku admin:${OS_PWD}"
+  echo "$(warn)    curl http://localhost:9200 -ku admin:${OS_PWD}"
   echo
   exit;
 fi
