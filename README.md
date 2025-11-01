@@ -28,6 +28,40 @@ run this container on a virtual machine provided by Podman.
    $ podamn attach osd
 ```
 
+4. OpenSearch backend can be found at the following URL and when accessed via browser should give
+   something like the following output:
+
+```
+   http://localhost:9200
+
+    {
+      "name" : "d80111d2fce1",
+      "cluster_name" : "docker-cluster",
+      "cluster_uuid" : "O76Ue_dETgaiAF_Kj3XtXQ",
+      "version" : {
+        "distribution" : "opensearch",
+        "number" : "3.3.1",
+        "build_type" : "tar",
+        "build_hash" : "d90ecec16cb1049b762ed7c94777f42fb97b1eea",
+        "build_date" : "2025-10-18T02:20:16.943324974Z",
+        "build_snapshot" : false,
+        "lucene_version" : "10.3.1",
+        "minimum_wire_compatibility_version" : "2.19.0",
+        "minimum_index_compatibility_version" : "2.0.0"
+      },
+      "tagline" : "The OpenSearch Project: https://opensearch.org/"
+    }
+```
+
+5. OpenSearch dashboard UI can be found at the following URL and accesses with
+   the default user and password (admin:OpenSearch@demo1):
+
+```
+    http://localhost:5601/app/home
+```
+<img src="docs/demo-images/login-screen.png" width="70%">
+
+<img src="docs/demo-images/home-screen.png" width="70%">
 
 Notes:
 -----
