@@ -53,14 +53,17 @@ run this container on a virtual machine provided by Podman.
     }
 ```
 
-5. OpenSearch dashboard UI can be found at the following URL and accesses with
+5. OpenSearch Dashboard UI can be found at the following URL and accesses with
    the default user and password (admin:OpenSearch@demo1):
 
 ```
     http://localhost:5601/app/home
 ```
 <img src="docs/demo-images/login-screen.png" width="70%">
-<br />
+
+6. After logging in to the OpenSearch Dashboard UI, it should look something
+   like this:
+
 <img src="docs/demo-images/home-screen.png" width="70%">
 
 Notes:
