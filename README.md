@@ -60,7 +60,7 @@ run this container on a virtual machine provided by Podman.
     http://localhost:5601/app/home
 ```
 <img src="docs/demo-images/login-screen.png" width="70%">
-
+<br />
 <img src="docs/demo-images/home-screen.png" width="70%">
 
 Notes:
