@@ -5,6 +5,7 @@ AUTHORS="Eric D. Schabell"
 PROJECT="git@gitlab.com:o11y-workshops/opensearch-install-demo.git"
 
 # variables used globally in sourced functions.
+export PODMAN_MEM=6144
 export WAIT_ON_CONTAINER_START=25
 export NET_NAME="os-net"
 export OS_APP="opensearch"
@@ -53,10 +54,48 @@ echo "$(info) ##                                                                
 echo "$(info) #######################################################################"
 echo
 
- # Check the  podman installation.
- echo "$(info) Checking if Podman is installed..."
- command -v podman --version -v  >/dev/null 2>&1 || { echo >&2 "$(error) Podman is required but not installed yet... download and install: https://podman.io/getting-started/installation"; exit; }
+# Check the podman installation.
+echo "$(info) Checking if Podman is installed..."
+command -v podman --version -v  >/dev/null 2>&1 || { echo >&2 "$(error) Podman is required but not installed yet... download and install: https://podman.io/getting-started/installation"; exit; }
  
+# Check if podman running.
+echo "$(info) Checking for running Podman machine instance..."
+current_status=$(podman machine inspect | grep State | tr -d ' ' | tr -d ','  | cut -d ':' -f2 | tr -d '"')
+
+if [ $current_status == "stopped" ]; then
+  echo
+  echo "$(error) There is currently no Podman machine instance running..." 
+  echo "$(error) Please start an existing Podman machine, ensuring it has the minimum memory for this demo as follows:" 
+  echo "$(error)"
+  echo "$(error)    $ podman machine set --memory ${PODMAN_MEM}"
+  echo "$(error)    $ podman machine start"
+  echo
+  echo "$(warn)  Or if a new Podman machine needs to be created, please use the minumum settings as follows:"
+  echo "$(warn)"
+  echo "$(warn)     $ podman machine init --memory ${PODMAN_MEM}"
+  echo "$(warn)     $ podman machine start"
+  echo
+  exit;
+fi
+
+# Check podman machine memory check.
+echo "$(info) Checking for minimum Podman machine memory sizing for installation..."
+current_setting=$(podman machine inspect | grep Memory | tr -d ' ' | cut -d ':' -f2 | cut -d ',' -f1)
+
+if [[ "$current_setting" -lt "${PODMAN_MEM}" ]]; then
+  echo
+  echo "$(error) The current memory setting ($current_setting) for Podman machine instance is too low..."
+  echo "$(error) Please adjust by stopping the Podman machine, changing the memory, and restarting as follows: "
+  echo "$(error)"
+  echo "$(error)    $ podman machine stop"
+  echo "$(error)    $ podman machine set --memory ${PODMAN_MEM}"
+  echo "$(error)    $ podman machine start"
+  echo
+  exit;
+else
+  echo "$(info) Podman machine memory setting found ($current_setting) met the minimum requirements (${PODMAN_MEM})..."
+fi
+
 # Configure network for opensearch containers.
 echo "$(info) Creating new network called ${NET_NAME}..."
 echo
