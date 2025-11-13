@@ -9,7 +9,7 @@ Install in a container (Podman)
 This is an installation using the provided Fluent Bit container image. You will
 run this container on a virtual machine provided by Podman.
 
-**Prerequisites:** Podman 4.x+ with your podman machine started.
+**Prerequisites:** Podman 5.x+ with your podman machine started.
 
 1. [Download and unzip this demo.](https://gitlab.com/o11y-workshops/opensearch-install-demo/-/archive/v1.0/opensearch-install-demo-v1.0.zip)
 
@@ -66,6 +66,70 @@ run this container on a virtual machine provided by Podman.
 
 <img src="docs/demo-images/home-screen.png" width="70%">
 
+7. Build a Fluent Bit image and run as follows:
+
+```
+    $ podman build -t opensearch:fbOS -f support/Buildfile
+
+    STEP 1/3: FROM ghcr.io/fluent/fluent-bit:4.2.0
+    STEP 2/3: COPY ./fluent-bit.yaml /fluent-bit/etc/fluent-bit.yaml
+    --> Using cache acb51a00c5a8c42a9001e5d6107544b7029a00d1e9546889e9c8fbddc0c467cf
+    STEP 3/3: CMD [ "fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.yaml"]
+    --> Using cache b22b4e15da953a3568d6b6866c0741d077ac2abfe10b35632c72059f194e53de
+    COMMIT opensearch:fbOS
+    Successfully tagged localhost/opensearch:fbOS
+    b22b4e15da953a3568d6b6866c0741d077ac2abfe10b35632c72059f194e53de
+
+    
+    $ podman run --rm --name fbOS --network os-net opensearch:fbOS
+
+    ...
+    [2025/11/13 17:53:27.609803213] [ info] [input:dummy:dummy.0] initializing
+    [2025/11/13 17:53:27.609808505] [ info] [input:dummy:dummy.0] storage_strategy='memory' (memory only)
+    [2025/11/13 17:53:27.609831921] [ info] [input:dummy:dummy.1] initializing
+    [2025/11/13 17:53:27.609836963] [ info] [input:dummy:dummy.1] storage_strategy='memory' (memory only)
+    [2025/11/13 17:53:27.609938587] [ info] [output:stdout:stdout.0] worker #0 started
+    [2025/11/13 17:53:27.610348253] [ info] [http_server] listen iface=0.0.0.0 tcp_port=2020
+    [2025/11/13 17:53:27.610356586] [ info] [sp] stream processor started
+    [2025/11/13 17:53:27.616956898] [ info] [engine] Shutdown Grace Period=5, Shutdown Input Grace Period=2
+    {"date":"2025-11-13 17:53:28.245085","message":"true 200 success"}
+    {"date":"2025-11-13 17:53:28.245159","message":"false 500 error"}
+    {"date":"2025-11-13 17:53:29.246148","message":"true 200 success"}
+    {"date":"2025-11-13 17:53:29.246251","message":"false 500 error"}
+    ...
+```
+
+8. Now go to the OpenSearch Dashboard at http://localhost:5601 and using top
+   left drop down menu, select DISCOVER:
+
+<img src="docs/demo-images/osd-1.png" width="70%">
+
+9. The first step is to create an index on the telemetry data we are collecting,
+   so click on the top right green  +CREATE INDEX PATTERN button:
+
+<img src="docs/demo-images/osd-2.png" width="70%">
+
+10. In the field called INDEX PATTERN NAME we need to search for our __fb-index*__ 
+    and click on the NEXT button as shown:
+
+<img src="docs/demo-images/osd-3.png" width="70%">
+
+11. The second step is to use the drop-down menu to select the __@timestamp__
+    field and click on the bottom right green button CREATE INDEX PATTERN as
+    shown: 
+
+<img src="docs/demo-images/osd-4.png" width="70%">
+
+12. This will display the new index we have created as follows:
+
+<img src="docs/demo-images/osd-5.png" width="70%">
+
+13. Finally, to view our Fluent Bit telemetry data being ingested into
+    OpenSearch, go back to the main menu on the top right and again select
+    DISCOVER to view the resulting dashboard:
+
+<img src="docs/demo-images/osd-6.png" width="70%">
+
 Notes:
 -----
 If for any reason the installation breaks or you want a new OpenSearch installation, just rerun the installation script to
@@ -81,5 +145,5 @@ Released versions
 -----------------
 See the tagged releases for the following versions of the product:
 
-- v1.0 - Supporting OpenSearch v3.3.1, OpenSearch Dashboards v3.3.0, installing in a container.
+- v1.0 - Supporting OpenSearch v3.3.1 and OpenSearch Dashboards v3.3.0 installed in containers, integrating with Fluent Bit 4.2.0.
 

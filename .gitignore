@@ -7,3 +7,4 @@ demo/
 output.json
 prometheus
 otelcol-contrib
+fluent-bit

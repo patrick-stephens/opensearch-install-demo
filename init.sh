@@ -5,8 +5,9 @@ AUTHORS="Eric D. Schabell"
 PROJECT="git@gitlab.com:o11y-workshops/opensearch-install-demo.git"
 
 # variables used globally in sourced functions.
+export MAJ_PODMAN_VERSION=5
 export PODMAN_MEM=6144
-export WAIT_ON_CONTAINER_START=25
+export WAIT_ON_CONTAINER_START=20
 export NET_NAME="os-net"
 export OS_APP="opensearch"
 export OS_VERSION=3.3.1
@@ -58,6 +59,17 @@ echo
 echo "$(info) Checking if Podman is installed..."
 command -v podman --version -v  >/dev/null 2>&1 || { echo >&2 "$(error) Podman is required but not installed yet... download and install: https://podman.io/getting-started/installation"; exit; }
  
+echo "$(info) Checking for Podman version..."
+maj_version=$(podman --version | cut -d" " -f3 | cut -d "." -f1)
+
+if [ "${maj_version}" -ge "${MAJ_PODMAN_VERSION}" ]; then
+  echo "$(info) Installed Podman version is v${maj_version}..."
+else
+  echo "$(error) Your Podman version is ${maj_version}, it must be ${MAJ_PODMAN_VERSION}.x or higher, please upgrade..."
+  echo
+  exit;
+fi
+
 # Check if podman running.
 echo "$(info) Checking for running Podman machine instance..."
 current_status=$(podman machine inspect | grep State | tr -d ' ' | tr -d ','  | cut -d ':' -f2 | tr -d '"')
@@ -120,7 +132,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo
-echo "$(info) Waiting for ${OS_APP} to start..."
+echo "$(info) Waiting for ${OS_APP} to deploy..."
 
 for ((i = 0; i < "${WAIT_ON_CONTAINER_START}"; ++i)); do
   echo "$(info) ..."
@@ -128,9 +140,9 @@ for ((i = 0; i < "${WAIT_ON_CONTAINER_START}"; ++i)); do
 done
 
 echo
-echo "$(info) Testing if ${OS_APP} is avialable..."
+echo "$(info) Testing if ${OS_APP} is available..."
 echo
-command curl http://localhost:9200 -ku admin:"${OS_PWD}"
+command curl http://localhost:9200 -ku admin:"${OS_PWD}" >/dev/null 2>&1
 
 if [ $? -ne 0 ]; then
   echo "$(warn) Error occurred during 'install_in_container' for ${OS_APP}..."
@@ -143,6 +155,8 @@ if [ $? -ne 0 ]; then
   exit;
 fi
 
+echo "$(info) Backend ${OS_APP} is available, moving onwards..."
+
 install_in_container "${OSD_APP}"
 
 if [ $? -ne 0 ]; then
@@ -152,35 +166,33 @@ if [ $? -ne 0 ]; then
 fi
 
 echo
-echo
-echo "$(info) =================================================================================================================="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =  Install complete, get ready to rock OpenSearch!                                                               ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =  Attach to the running container images with the following:                                                    ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =    $ podman attach ${OS_APP}                                                                                  ="
-echo "$(info) =    $ podman attach osd                                                                                         ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =  The ${OS_APP} is available at:                                                                               ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =    http://localhost:9200  (admin:${OS_PWD})                                                             ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =  The ${OSD_APP} is available at:                                                                    ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =    http://localhost:5601  (admin:${OS_PWD})                                                             ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =  If you stop the containers, they will be removed, so to restart run the following commands:                   ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =   $ podman run --name ${OS_APP} -d --network "${NET_NAME}" -p 9200:9200 -p 9600:9600                 \               ="
-echo "$(info) =       -e 'discovery.type=single-node' -e 'plugins.security.ssl.http.enabled=false'             \               ="
-echo "$(info) =       -e 'plugins.security.disabled=false' OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OS_PWD}  \               ="
-echo "$(info) =       ${OS_IMAGE}:${OS_VERSION}                                                                       ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =   $ podman run --name osd -d --network "${NET_NAME}" -p 5601:5601 -v                                               \  ="
-echo "$(info) =       ./${OSD_CONFIG}:/usr/share/${OSD_APP}/config/opensearch_dashboards.yml \  ="
-echo "$(info) =       ${OSD_IMAGE}:${OSD_VERSION}                                                            ="
-echo "$(info) =                                                                                                                ="
-echo "$(info) =================================================================================================================="
+echo "$(info) ====================================================================================================================="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =  Install complete, get ready to rock OpenSearch!                                                                  ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =  Attach to the running container images with the following:                                                       ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =    $ podman attach ${OS_APP}                                                                                     ="
+echo "$(info) =    $ podman attach osd                                                                                            ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =  The ${OS_APP} is available at:                                                                                  ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =    http://localhost:9200  (admin:${OS_PWD})                                                                ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =  The ${OSD_APP} is available at:                                                                       ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =    http://localhost:5601  (admin:${OS_PWD})                                                                ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =  If you stop the containers, they will be removed, so to restart run the following commands:                      ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =   $ podman run --name ${OS_APP} -d --network "${NET_NAME}" -p 9200:9200 -p 9600:9600                                 \  ="
+echo "$(info) =       -e 'discovery.type=single-node' -e 'DISABLE_INSTALL_DEMO_CONFIG=true' -e 'DISABLE_SECURITY_PLUGIN=true'  \  ="
+echo "$(info) =       ${OS_IMAGE}:${OS_VERSION}                                                                          ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) =   $ podman run --name osd -d --network "${NET_NAME}" -p 5601:5601 -v  -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'    \  ="
+echo "$(info) =       -v ./${OSD_CONFIG}:/usr/share/${OSD_APP}/config/opensearch_dashboards.yml \  ="
+echo "$(info) =       ${OSD_IMAGE}:${OSD_VERSION}                                                               ="
+echo "$(info) =                                                                                                                   ="
+echo "$(info) ====================================================================================================================="
 echo
 

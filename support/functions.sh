@@ -9,21 +9,19 @@ function install_in_container()
   # Container image app to install.
   app_name=$1
 
-  echo "$(info) Starting the container image for $app_name..."
-
   if [ $app_name == $OS_APP ]; then
-    echo "$(info) Starting the ${OS_APP} image..."
+    echo "$(info) Deploying the ${OS_APP} backend..."
     echo
-    command podman run --name "${OS_APP}" -d -p 9200:9200 -p 9600:9600 --network "${NET_NAME}" -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OS_PWD}" -e "plugins.security.ssl.http.enabled=false" -e "plugins.security.disabled=false" "${OS_IMAGE}":"${OS_VERSION}"
+    command podman run --name "${OS_APP}" -d -p 9200:9200 -p 9600:9600 --network "${NET_NAME}" -e "discovery.type=single-node" -e "DISABLE_INSTALL_DEMO_CONFIG=true" -e "DISABLE_SECURITY_PLUGIN=true" "${OS_IMAGE}":"${OS_VERSION}"
   elif [ $app_name == $OSD_APP ]; then
-    echo "$(info) Starting the ${OSD_APP} image..."
+    echo "$(info) Deploying the ${OSD_APP} frontend..."
     echo
-    command podman run --name osd -d --network "${NET_NAME}" -p 5601:5601 -v ./"${OSD_CONFIG}":/usr/share/"${OSD_APP}"/config/opensearch_dashboards.yml "${OSD_IMAGE}":"${OSD_VERSION}"
+    command podman run --name osd -d --network "${NET_NAME}" -p 5601:5601 -e "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true" -v ./"${OSD_CONFIG}":/usr/share/"${OSD_APP}"/config/opensearch_dashboards.yml "${OSD_IMAGE}":"${OSD_VERSION}"
   fi
 
   if [ $? -ne 0 ]; then
     echo
-    echo "$(warn) Cleaning up any images that might still be running..."
+    echo "$(warn) Cleaning up any workloads that might still be running..."
   
     if [ $app_name == $OS_APP ]; then
       command podman container stop "${OS_APP}" >/dev/null 2>&1
@@ -33,14 +31,14 @@ function install_in_container()
       command podman container rm "${OS_APP}" >/dev/null 2>&1
     fi
 
-    echo "$(warn) Starting fresh container image..."
+    echo "$(warn) Starting fresh workload..."
 
     if [ $app_name == $OS_APP ]; then
-      echo "$(info) Starting the ${OS_APP} image..."
-      command podman run --name "${OS_APP}" -d --network "${NET_NAME}" -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OS_PWD}" -e "plugins.security.ssl.http.enabled=false" -e "plugins.security.disabled=false" "${OS_IMAGE}":"${OS_VERSION}"
+      echo "$(info) Deploying the ${OS_APP} backend..."
+      command podman run --name "${OS_APP}" -d --network "${NET_NAME}" -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "DISABLE_INSTALL_DEMO_CONFIG=true" -e "DISABLE_SECURITY_PLUGIN=true"  "${OS_IMAGE}":"${OS_VERSION}"
     elif [ $app_name == $OSD_APP ]; then
-      echo "$(info) Starting the ${OSD_APP} image..."
-      command podman run --name osd -d --network "${NET_NAME}" -p 5601:5601 -v ./"${OSD_CONFIG}":/usr/share/"${OSD_APP}"/config/opensearch_dashboards.yml "${OSD_IMAGE}":"${OSD_VERSION}"
+      echo "$(info) Deploying the ${OSD_APP} frontend..."
+      command podman run --name osd -d --network "${NET_NAME}" -p 5601:5601 -e "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true" -v ./"${OSD_CONFIG}":/usr/share/"${OSD_APP}"/config/opensearch_dashboards.yml "${OSD_IMAGE}":"${OSD_VERSION}"
     fi
 
     if [ $? -ne 0 ]; then
@@ -49,19 +47,19 @@ function install_in_container()
         echo
         echo "$(error) ====================================================================================================================="
         echo "$(error) =                                                                                                                   ="
-        echo "$(error) =  Error occurred during 'podman run' starting of a container...                                                    ="
+        echo "$(error) =  Error occurred during 'podman run' deploying of a workload...                                                    ="
         echo "$(error) =                                                                                                                   ="
         echo "$(error) =  The problem is with the following command, so maybe try it outside this installation script:                     ="
         echo "$(error) =                                                                                                                   ="
     
         if [ $app_name == $OS_APP ]; then
-          echo "$(error) =   $ podman run --name ${OS_APP} -d --network "${NET_NAME}" -p 9200:9200 -p 9600:9600 -e 'discovery.type=single-node' \  ="
-          echo "$(error) =       -e 'plugins.security.ssl.http.enabled=false' -e 'plugins.security.disabled=false'                        \  =" 
-          echo "$(error) =       OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OS_PWD} ${OS_IMAGE}:${OS_VERSION}                       ="
+          echo "$(error) =   $ podman run --name ${OS_APP} -d --network ${NET_NAME} -p 9200:9200 -p 9600:9600 -e 'discovery.type=single-node' \  ="
+          echo "$(error) =       -e 'DISABLE_INSTALL_DEMO_CONFIG=true' -e 'DISABLE_SECURITY_PLUGIN=true' i                                    \  ="
+          echo "$(error) =       ${OS_IMAGE}:${OS_VERSION}               ="
         elif [ $app_name == $OSD_APP ]; then
-          echo "$(error) =   $ podman run --name osd -d --network "${NET_NAME}" -p 5601:5601                                                     \  ="
+          echo "$(error) =   $ podman run --name osd -d --network ${NET_NAME} -p 5601:5601 -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'       \  ="
           echo "$(error) =       -v ./${OSD_CONFIG}:/usr/share/${OSD_APP}/config/opensearch_dashboards.yml \  ="
-          echo "$(error) =       ${OSD_IMAGE}:${OSD_VERSION}                                                               ="
+          echo "$(error) =       ${OSD_IMAGE}:${OSD_VERSION}                 ="
         fi
 
         echo "$(error) =                                                                                                                   ="

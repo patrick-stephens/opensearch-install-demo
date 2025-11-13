@@ -1,0 +1,39 @@
+# This file is our workshop Fluent Bit configuration.
+#
+service:
+  flush: 1
+  log_level: info
+  http_server: on
+  http_listen: 0.0.0.0
+  http_port: 2020
+  hot_reload: on
+
+pipeline:
+  inputs:
+    # This entry generates a successful message.
+    - name:  dummy
+      tag:   event.success
+      dummy: '{"message":"true 200 success"}'
+
+    # This entry generates a failure message.
+    - name:  dummy
+      tag:   event.error
+      dummy: '{"message":"false 500 error"}'
+
+  outputs:
+    - name: stdout
+      match: '*'
+      format: json_stream
+      json_date_format: java_sql_timestamp
+
+    - name: opensearch
+      match: '*'
+      #host: localhost                # use for source
+      host: host.containers.internal  # use for containers
+      port: 9200
+      http_user: 'admin'
+      http_passwd: 'Opensearch@demo1'
+      index: fb-index
+      type: fbType
+      net.keepalive: off
+      suppress_type_name: true
