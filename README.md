@@ -102,7 +102,7 @@ run this container on a virtual machine provided by Podman.
 8. Now go to the OpenSearch Dashboard at http://localhost:5601 and using top
    left drop down menu, select DISCOVER:
 
-<img src="docs/demo-images/osd-1.png" width="70%">
+<img src="docs/demo-images/osd-1.png" width="30%">
 
 9. The first step is to create an index on the telemetry data we are collecting,
    so click on the top right green  +CREATE INDEX PATTERN button:
