@@ -59,12 +59,12 @@ run this container on a virtual machine provided by Podman.
 ```
     http://localhost:5601/app/home
 ```
-<img src="docs/demo-images/login-screen.png" width="70%">
+<img src="docs/demo-images/login-screen.png"> 
 
 6. After logging in to the OpenSearch Dashboard UI, it should look something
    like this:
 
-<img src="docs/demo-images/home-screen.png" width="70%">
+<img src="docs/demo-images/home-screen.png">
 
 7. Build a Fluent Bit image and run as follows:
 
@@ -107,28 +107,28 @@ run this container on a virtual machine provided by Podman.
 9. The first step is to create an index on the telemetry data we are collecting,
    so click on the top right green  +CREATE INDEX PATTERN button:
 
-<img src="docs/demo-images/osd-2.png" width="70%">
+<img src="docs/demo-images/osd-2.png">
 
 10. In the field called INDEX PATTERN NAME we need to search for our __fb-index*__ 
     and click on the NEXT button as shown:
 
-<img src="docs/demo-images/osd-3.png" width="70%">
+<img src="docs/demo-images/osd-3.png">
 
 11. The second step is to use the drop-down menu to select the __@timestamp__
     field and click on the bottom right green button CREATE INDEX PATTERN as
     shown: 
 
-<img src="docs/demo-images/osd-4.png" width="70%">
+<img src="docs/demo-images/osd-4.png">
 
 12. This will display the new index we have created as follows:
 
-<img src="docs/demo-images/osd-5.png" width="70%">
+<img src="docs/demo-images/osd-5.png">
 
 13. Finally, to view our Fluent Bit telemetry data being ingested into
     OpenSearch, go back to the main menu on the top right and again select
     DISCOVER to view the resulting dashboard:
 
-<img src="docs/demo-images/osd-6.png" width="70%">
+<img src="docs/demo-images/osd-6.png">
 
 Notes:
 -----
