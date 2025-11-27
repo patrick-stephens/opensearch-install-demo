@@ -4,6 +4,8 @@ This demo is to install OpenSearch, an open-source, all-in-one vector database f
 It delivers a ready to use installation with vectore database and visual dashboards. The installation scripts check for and validate
 prerequisites automatically.
 
+Explore how this all works in the free [hands-on workshop](https://o11y-workshops.gitlab.io/workshop-fluentbit).
+
 Install in a container (Podman)
 -------------------------------
 This is an installation using the provided Fluent Bit container image. You will
@@ -69,19 +71,19 @@ run this container on a virtual machine provided by Podman.
 7. Build a Fluent Bit image and run as follows:
 
 ```
-    $ podman build -t opensearch:fbOS -f support/Buildfile
+    $ podman build -t opensearch:fb-opensearch -f support/Buildfile
 
     STEP 1/3: FROM ghcr.io/fluent/fluent-bit:4.2.0
     STEP 2/3: COPY ./fluent-bit.yaml /fluent-bit/etc/fluent-bit.yaml
     --> Using cache acb51a00c5a8c42a9001e5d6107544b7029a00d1e9546889e9c8fbddc0c467cf
     STEP 3/3: CMD [ "fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.yaml"]
     --> Using cache b22b4e15da953a3568d6b6866c0741d077ac2abfe10b35632c72059f194e53de
-    COMMIT opensearch:fbOS
-    Successfully tagged localhost/opensearch:fbOS
+    COMMIT opensearch:fb-opensearch
+    Successfully tagged localhost/opensearch:fb-opensearch
     b22b4e15da953a3568d6b6866c0741d077ac2abfe10b35632c72059f194e53de
 
     
-    $ podman run --rm --name fbOS --network os-net opensearch:fbOS
+    $ podman run --rm --name fbOS --network os-net opensearch:fb-opensearch
 
     ...
     [2025/11/13 17:53:27.609803213] [ info] [input:dummy:dummy.0] initializing
@@ -129,6 +131,13 @@ run this container on a virtual machine provided by Podman.
     DISCOVER to view the resulting dashboard:
 
 <img src="docs/demo-images/osd-6.png">
+
+14. To stop all containers in this demo:
+
+```
+    $ podman build -t opensearch:fb-opensearch -f support/Buildfile
+
+ 
 
 Notes:
 -----
