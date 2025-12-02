@@ -27,7 +27,7 @@ run this container on a virtual machine provided by Podman.
 ```
    $ podman attach opensearch
 
-   $ podamn attach osd
+   $ podman attach osd
 ```
 
 4. OpenSearch backend can be found at the following URL and when accessed via browser should give
