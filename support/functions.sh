@@ -18,7 +18,7 @@ function install_in_container()
   elif [ $app_name == $OSD_APP ]; then
     echo "$(info) Deploying the ${OSD_APP} frontend..."
     echo
-    command "$CONTAINER_RUNTIME" run --name osd -d --network "${NET_NAME}" -p 5601:5601 -e "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true" -v ./"${OSD_CONFIG}":/usr/share/"${OSD_APP}"/config/opensearch_dashboards.yml "${OSD_IMAGE}":"${OSD_VERSION}"
+    command "$CONTAINER_RUNTIME" run --name "${OSD_APP}" -d --network "${NET_NAME}" -p 5601:5601 -e "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true" -v ./"${OSD_CONFIG}":/usr/share/"${OSD_APP}"/config/opensearch_dashboards.yml "${OSD_IMAGE}":"${OSD_VERSION}"
   fi
 
   if [ $? -ne 0 ]; then
@@ -29,7 +29,7 @@ function install_in_container()
       command "$CONTAINER_RUNTIME" container stop "${OS_APP}" >/dev/null 2>&1
       command "$CONTAINER_RUNTIME" container rm "${OS_APP}" >/dev/null 2>&1
     elif [ $app_name == $OSD_APP ]; then
-      command "$CONTAINER_RUNTIME" container stop "${OS_APP}" >/dev/null 2>&1
+      command "$CONTAINER_RUNTIME" container stop "${OSD_APP}" >/dev/null 2>&1
       command "$CONTAINER_RUNTIME" container rm "${OSD_APP}" >/dev/null 2>&1
     fi
 
