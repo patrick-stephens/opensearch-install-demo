@@ -120,7 +120,7 @@ if [[ "$CONTAINER_RUNTIME" == "podman" ]]; then
     echo "$(info) Podman machine memory setting found ($current_setting) met the minimum requirements (${PODMAN_MEM})..."
   fi
 else
-  echo "$(warn) Container runtime is set to ${CONTAINER_RUNTIME}, if this is not intentional, set the environment variable CONTAINER_RUNTIME back to podman and re-run this installation script..."
+  echo "$(info) Container runtime is set to ${CONTAINER_RUNTIME}, if this is not intentional, set the environment variable CONTAINER_RUNTIME back to podman and re-run this installation script..."
 fi
 
 # Configure network for opensearch containers.
@@ -185,6 +185,11 @@ echo "$(info) ==================================================================
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =  Install complete, get ready to rock OpenSearch!                                                                  ="
 echo "$(info) =                                                                                                                   ="
+echo "$(info) =  To send data using Fluent Bit, use the following command:                                                        ="
+echo "$(info) =    $ "$CONTAINER_RUNTIME" run --rm -it --network "${NET_NAME}" \                                                           ="
+echo "$(info) =      -v $(pwd)/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml \                                                  ="
+echo "$(info) =      -c /fluent-bit/etc/fluent-bit.yaml                                                                           ="
+echo "$(info) =                                                                                                                   ="
 echo "$(info) =  Attach to the running container images with the following:                                                       ="
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =    $ $CONTAINER_RUNTIME attach ${OS_APP}                                                                          ="
@@ -200,11 +205,15 @@ echo "$(info) =    http://localhost:5601  (admin:${OS_PWD})                     
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =  If you stop the containers, they will be removed, so to restart run the following commands:                      ="
 echo "$(info) =                                                                                                                   ="
-echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OS_APP} -d --network "${NET_NAME}" -p 9200:9200 -p 9600:9600               \  ="
-echo "$(info) =       -e 'discovery.type=single-node' -e 'DISABLE_INSTALL_DEMO_CONFIG=true' -e 'DISABLE_SECURITY_PLUGIN=true'  \  ="
+echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OS_APP} -d --network "${NET_NAME}" \                                          ="
+echo "$(info) =       -p 9200:9200 -p 9600:9600               \                                                                   ="
+echo "$(info) =       -e 'discovery.type=single-node' \                                                                           ="
+echo "$(info) =       -e 'DISABLE_INSTALL_DEMO_CONFIG=true' \                                                                     ="
+echo "$(info) =       -e 'DISABLE_SECURITY_PLUGIN=true'  \                                                                        ="
 echo "$(info) =       ${OS_IMAGE}:${OS_VERSION}                                                                                   ="
 echo "$(info) =                                                                                                                   ="
-echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OSD_APP} -d --network "${NET_NAME}" -p 5601:5601 -v  -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'    \  ="
+echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OSD_APP} -d --network "${NET_NAME}" \                                         ="
+echo "$(info) =       -p 5601:5601 -v  -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'    \                                          ="
 echo "$(info) =       -v ./${OSD_CONFIG}:/usr/share/${OSD_APP}/config/opensearch_dashboards.yml \                                 ="
 echo "$(info) =       ${OSD_IMAGE}:${OSD_VERSION}                                                                                 ="
 echo "$(info) =                                                                                                                   ="

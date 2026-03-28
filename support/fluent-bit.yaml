@@ -29,7 +29,8 @@ pipeline:
     - name: opensearch
       match: '*'
       #host: localhost                # use for source
-      host: host.containers.internal  # use for containers
+      #host: host.containers.internal # use for containers on macOS
+      host: opensearch                # container networks should set hostnames to the name of the container running opensearch
       port: 9200
       http_user: 'admin'
       http_passwd: 'Opensearch@demo1'

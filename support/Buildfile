@@ -4,4 +4,5 @@ FROM ghcr.io/fluent/fluent-bit:4.2.0
 
 COPY ./fluent-bit.yaml /fluent-bit/etc/fluent-bit.yaml
 
-CMD [ "fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.yaml"]
+ENTRYPOINT [ "fluent-bit" ]
+CMD [ "-c", "/fluent-bit/etc/fluent-bit.yaml"]
