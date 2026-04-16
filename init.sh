@@ -143,7 +143,6 @@ if command "$CONTAINER_RUNTIME" network inspect "${NET_NAME}" >/dev/null 2>&1; t
 else
   echo "$(info) Creating new network called ${NET_NAME}..."
   echo
-  command "$CONTAINER_RUNTIME" network rm -f "${NET_NAME}"
   command "$CONTAINER_RUNTIME" network create "${NET_NAME}"
 
   if [ $? -ne 0 ]; then
