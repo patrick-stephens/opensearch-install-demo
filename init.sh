@@ -244,7 +244,7 @@ echo "$(info) =       -e 'DISABLE_SECURITY_PLUGIN=true'  \                      
 echo "$(info) =       ${OS_IMAGE}:${OS_VERSION}                                                                          ="
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OSD_APP} -d --network ${NET_NAME} \                                                 ="
-echo "$(info) =       -p 5601:5601 -v  -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'    \                                          ="
+echo "$(info) =       -p 5601:5601 -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'    \                                             ="
 echo "$(info) =       -v ./${OSD_CONFIG}:/usr/share/${OSD_APP}/config/opensearch_dashboards.yml \  ="
 echo "$(info) =       ${OSD_IMAGE}:${OSD_VERSION}                                                               ="
 echo "$(info) =                                                                                                                   ="
