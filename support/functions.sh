@@ -56,7 +56,7 @@ function install_in_container()
     
         if [ $app_name == $OS_APP ]; then
           echo "$(error) =   $ $CONTAINER_RUNTIME run --name ${OS_APP} -d --network ${NET_NAME} -p 9200:9200 -p 9600:9600 -e 'discovery.type=single-node' \  ="
-          echo "$(error) =       -e 'DISABLE_INSTALL_DEMO_CONFIG=true' -e 'DISABLE_SECURITY_PLUGIN=true' i                                    \  ="
+          echo "$(error) =       -e 'DISABLE_INSTALL_DEMO_CONFIG=true' -e 'DISABLE_SECURITY_PLUGIN=true'                                      \  ="
           echo "$(error) =       ${OS_IMAGE}:${OS_VERSION}               ="
         elif [ $app_name == $OSD_APP ]; then
           echo "$(error) =   $ $CONTAINER_RUNTIME run --name ${OSD_APP} -d --network ${NET_NAME} -p 5601:5601 -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'       \  ="
