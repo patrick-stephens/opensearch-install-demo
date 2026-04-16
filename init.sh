@@ -20,13 +20,6 @@ export OSD_IMAGE="opensearchproject/${OSD_APP}"
 export OSD_CONFIG="support/${OSD_APP}.yml"
 
 export CONTAINER_RUNTIME=${CONTAINER_RUNTIME:-podman}
-if [[ $# -gt 0 ]]; then
-  if [[ "$1" == "podman" || "$1" == "docker" ]]; then
-    CONTAINER_RUNTIME=$1
-  else
-    echo "$(warn) Container runtime passed in as an argument is not valid, defaulting to podman..."
-  fi
-fi
 
 # importing functions.
 source ./support/functions.sh
@@ -64,6 +57,14 @@ echo "$(info) ##  ${PROJECT}      ##"
 echo "$(info) ##                                                                   ##"   
 echo "$(info) #######################################################################"
 echo
+
+if [[ $# -gt 0 ]]; then
+  if [[ "$1" == "podman" || "$1" == "docker" ]]; then
+    CONTAINER_RUNTIME=$1
+  else
+    echo "$(warn) Container runtime passed in as an argument is not valid, defaulting to podman..."
+  fi
+fi
 
 if [[ "$CONTAINER_RUNTIME" == "podman" ]]; then
   echo "$(info) Using Podman as the container runtime for this installation demo..."
