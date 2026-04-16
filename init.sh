@@ -69,7 +69,7 @@ if [[ "$CONTAINER_RUNTIME" == "podman" ]]; then
   echo "$(info) Using Podman as the container runtime for this installation demo..."
   # Check the podman installation.
   echo "$(info) Checking if Podman is installed..."
-  command -v podman --version -v  >/dev/null 2>&1 || { echo >&2 "$(error) Podman is required but not installed yet... download and install: https://podman.io/getting-started/installation"; exit; }
+  command -v podman >/dev/null 2>&1 || { echo >&2 "$(error) Podman is required but not installed yet... download and install: https://podman.io/getting-started/installation"; exit; }
   
   echo "$(info) Checking for Podman version..."
   maj_version=$(podman --version | cut -d" " -f3 | cut -d "." -f1)
