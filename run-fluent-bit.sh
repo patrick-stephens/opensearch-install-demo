@@ -12,4 +12,18 @@ while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SCRIPT_DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
-"${CONTAINER_RUNTIME:-podman}" run --rm -it --network "${NET_NAME:-os-net}" -v "$SCRIPT_DIR/support/fluent-bit.yaml":/fluent-bit/etc/fluent-bit.yaml ghcr.io/fluent/fluent-bit:4.2.3 -c /fluent-bit/etc/fluent-bit.yaml
+export CONTAINER_RUNTIME=${CONTAINER_RUNTIME:-podman}
+
+if [[ $# -gt 0 ]]; then
+  if [[ "$1" == "podman" || "$1" == "docker" ]]; then
+    export CONTAINER_RUNTIME=$1
+  else
+    echo "$(warn) Container runtime passed in as an argument is not valid, defaulting to podman..."
+    export CONTAINER_RUNTIME=podman
+  fi
+fi
+
+
+"$CONTAINER_RUNTIME" run --rm -it --network "${NET_NAME:-os-net}" \
+    -v "$SCRIPT_DIR/support/fluent-bit.yaml":/fluent-bit/etc/fluent-bit.yaml \
+    ghcr.io/fluent/fluent-bit:4.2.3 -c /fluent-bit/etc/fluent-bit.yaml
