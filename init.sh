@@ -119,6 +119,20 @@ if [[ "$CONTAINER_RUNTIME" == "podman" ]]; then
   else
     echo "$(info) Podman machine memory setting found ($current_setting) met the minimum requirements (${PODMAN_MEM})..."
   fi
+elif [[ "$CONTAINER_RUNTIME" == "docker" ]]; then
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "$(error) Docker is not installed or not found in PATH, but CONTAINER_RUNTIME is set to 'docker'..."
+    echo "$(error) Please install Docker (https://docs.docker.com/get-docker/) and ensure it is available on your PATH, then re-run this installation script..."
+    echo
+    exit;
+  fi
+
+  if ! command docker info >/dev/null 2>&1; then
+    echo "$(error) Docker daemon does not appear to be running or is not reachable..."
+    echo "$(error) Please ensure the Docker service is running and that your user has permission to access the Docker daemon, then re-run this installation script..."
+    echo
+    exit;
+  fi
 else
   echo "$(info) Container runtime is set to ${CONTAINER_RUNTIME}, if this is not intentional, set the environment variable CONTAINER_RUNTIME back to podman and re-run this installation script..."
 fi
