@@ -1,6 +1,6 @@
 # podman build -t opensearch:fbOS -f Buildfile
 # podman run --rm --name fbOS opensearch:fbOS
-FROM ghcr.io/fluent/fluent-bit:4.2.0
+FROM ghcr.io/fluent/fluent-bit:4.2.3
 
 COPY ./fluent-bit.yaml /fluent-bit/etc/fluent-bit.yaml
 

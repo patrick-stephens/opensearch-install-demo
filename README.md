@@ -73,7 +73,7 @@ run this container on a virtual machine provided by Podman.
 Run an image directly with the configuration file as follows:
 
 ```shell
-    $  docker run --rm -it -v $PWD/support/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml:ro --network os-net ghcr.io/fluent/fluent-bit:4.2.0 -c /fluent-bit/etc/fluent-bit.yaml
+    $  podman run --rm -it -v $PWD/support/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml:ro --network os-net ghcr.io/fluent/fluent-bit:4.2.0 -c /fluent-bit/etc/fluent-bit.yaml
 ```
 
 Alternatively, build a Fluent Bit image and run as follows:

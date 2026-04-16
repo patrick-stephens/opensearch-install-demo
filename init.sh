@@ -72,9 +72,10 @@ echo
 
 if [[ $# -gt 0 ]]; then
   if [[ "$1" == "podman" || "$1" == "docker" ]]; then
-    CONTAINER_RUNTIME=$1
+    export CONTAINER_RUNTIME=$1
   else
     echo "$(warn) Container runtime passed in as an argument is not valid, defaulting to podman..."
+    export CONTAINER_RUNTIME=podman
   fi
 fi
 
@@ -216,9 +217,9 @@ echo "$(info) =                                                                 
 echo "$(info) =  Install complete, get ready to rock OpenSearch!                                                                  ="
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =  To send data using Fluent Bit, use the following command:                                                        ="
-echo "$(info) =    $ ${CONTAINER_RUNTIME} run --rm -it --network \"${NET_NAME}\" \                                                ="
+echo "$(info) =    $ ${CONTAINER_RUNTIME} run --rm -it --network ${NET_NAME} \                                                ="
 echo "$(info) =      -v \$PWD/support/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml \                                          ="
-echo "$(info) =      fluent/fluent-bit:latest -c /fluent-bit/etc/fluent-bit.yaml                                                 ="
+echo "$(info) =      fluent/fluent-bit:4.2.3 -c /fluent-bit/etc/fluent-bit.yaml                                                   ="
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =  Attach to the running container images with the following:                                                       ="
 echo "$(info) =                                                                                                                   ="
@@ -235,14 +236,14 @@ echo "$(info) =    http://localhost:5601  (admin:${OS_PWD})                     
 echo "$(info) =                                                                                                                   ="
 echo "$(info) =  If you stop the containers, they will be removed, so to restart run the following commands:                      ="
 echo "$(info) =                                                                                                                   ="
-echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OS_APP} -d --network "${NET_NAME}" \                                                            ="
+echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OS_APP} -d --network ${NET_NAME} \                                                            ="
 echo "$(info) =       -p 9200:9200 -p 9600:9600               \                                                                   ="
 echo "$(info) =       -e 'discovery.type=single-node' \                                                                           ="
 echo "$(info) =       -e 'DISABLE_INSTALL_DEMO_CONFIG=true' \                                                                     ="
 echo "$(info) =       -e 'DISABLE_SECURITY_PLUGIN=true'  \                                                                        ="
 echo "$(info) =       ${OS_IMAGE}:${OS_VERSION}                                                                          ="
 echo "$(info) =                                                                                                                   ="
-echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OSD_APP} -d --network "${NET_NAME}" \                                                 ="
+echo "$(info) =   $ $CONTAINER_RUNTIME run --name ${OSD_APP} -d --network ${NET_NAME} \                                                 ="
 echo "$(info) =       -p 5601:5601 -v  -e 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'    \                                          ="
 echo "$(info) =       -v ./${OSD_CONFIG}:/usr/share/${OSD_APP}/config/opensearch_dashboards.yml \  ="
 echo "$(info) =       ${OSD_IMAGE}:${OSD_VERSION}                                                               ="
