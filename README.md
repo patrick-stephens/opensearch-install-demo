@@ -145,7 +145,7 @@ If you get errors flushing to Opensearch then check the hostname in the [`suppor
 14. To stop all containers in this demo:
 
 ```
-    $ podman build -t opensearch:fb-opensearch -f support/Buildfile
+    $ podman stop -a
 ```
  
 
