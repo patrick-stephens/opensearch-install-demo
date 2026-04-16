@@ -68,7 +68,15 @@ run this container on a virtual machine provided by Podman.
 
 <img src="docs/demo-images/home-screen.png">
 
-7. Build a Fluent Bit image and run as follows:
+7. 
+
+Run an image directly with the configuration file as follows:
+
+```shell
+    $  podman run --rm -it -v $PWD/support/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml:ro --network os-net ghcr.io/fluent/fluent-bit:4.2.0 -c /fluent-bit/etc/fluent-bit.yaml
+```
+
+Alternatively, build a Fluent Bit image and run as follows:
 
 ```
     $ podman build -t opensearch:fb-opensearch -f support/Buildfile
@@ -100,6 +108,8 @@ run this container on a virtual machine provided by Podman.
     {"date":"2025-11-13 17:53:29.246251","message":"false 500 error"}
     ...
 ```
+
+If you get errors flushing to Opensearch then check the hostname in the [`support/fluent-bit.yaml`](./support/fluent-bit.yaml) configuration file. The hostname may need tweaking depending on OS and how the container runtime exposes it.
 
 8. Now go to the OpenSearch Dashboard at http://localhost:5601 and using top
    left drop down menu, select DISCOVER:
@@ -135,8 +145,8 @@ run this container on a virtual machine provided by Podman.
 14. To stop all containers in this demo:
 
 ```
-    $ podman build -t opensearch:fb-opensearch -f support/Buildfile
-
+    $ podman stop -a
+```
  
 
 Notes:
@@ -145,14 +155,9 @@ If for any reason the installation breaks or you want a new OpenSearch installat
 reinstall the containers.
 
 
-Supporting Articles
--------------------
-- [Coming soon...]
-
-
 Released versions
 -----------------
 See the tagged releases for the following versions of the product:
 
 - v1.0 - Supporting OpenSearch v3.3.1 and OpenSearch Dashboards v3.3.0 installed in containers, integrating with Fluent Bit 4.2.0.
-
+- v1.1 - Add support for Docker as a container runtime on Linux
